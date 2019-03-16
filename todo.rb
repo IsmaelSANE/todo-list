@@ -5,6 +5,7 @@ module Menu
     Please press the key 2 if you want to SHOW a list.
     Please press the key 3 if you want to UPDATE a list.
     Please press the key 4 if you want to READ a list.
+    Please press the key 5 if you want to DELETE a list.
     Please press the key Q if you want to QUIT the program"
   end
   def show
@@ -33,7 +34,7 @@ class List
   end
 
   def show
-    all_tasks.to_s
+    all_tasks.map.with_index { |l, i| "(#{i.next}): #{l}"}
   end
 
   def write_to_file(filename)
@@ -42,6 +43,10 @@ class List
 
   def read_for_file(filename)
     IO.readlines(filename).each { |line| add(Task.new(line.chomp)) }
+  end
+
+  def delete(task_number)
+    all_tasks.delete_at(task_number - 1)
   end
 end
 
@@ -77,6 +82,9 @@ if __FILE__ == $PROGRAM_NAME
       rescue Errno::ENOENT
         puts 'File name not found, please verify your file name and path.'
       end
+    when '5'
+      puts actual_list.show
+      actual_list.delete(prompt('Which task to delete?').to_i)
     else
       puts "Sorry, I did not understand"
     end
