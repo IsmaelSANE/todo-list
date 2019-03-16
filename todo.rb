@@ -5,7 +5,8 @@ module Menu
     Please press the key 2 if you want to SHOW a list.
     Please press the key 3 if you want to UPDATE a list.
     Please press the key 4 if you want to READ a list.
-    Please press the key 5 if you want to DELETE a list.
+    Please press the key 5 if you want to WRITE a list.
+    Please press the key 6 if you want to DELETE a list.
     Please press the key Q if you want to QUIT the program"
   end
   def show
@@ -48,6 +49,10 @@ class List
   def delete(task_number)
     all_tasks.delete_at(task_number - 1)
   end
+
+  def update(task_number, task)
+    all_tasks[task_number - 1] = task
+  end
 end
 
 class Task
@@ -75,7 +80,8 @@ if __FILE__ == $PROGRAM_NAME
     when '2'
       puts actual_list.show
     when '3'
-      actual_list.write_to_file(prompt('Please enter a filename'))
+      actual_list.update(prompt('Which task to update?').to_i,
+      Task.new(prompt('Task Description?')))
     when '4'
       begin
         actual_list.read_for_file(prompt('Please enter a filename'))
@@ -83,6 +89,8 @@ if __FILE__ == $PROGRAM_NAME
         puts 'File name not found, please verify your file name and path.'
       end
     when '5'
+      actual_list.write_to_file(prompt('Please enter a filename'))
+    when '6'
       puts actual_list.show
       actual_list.delete(prompt('Which task to delete?').to_i)
     else
