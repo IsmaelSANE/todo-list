@@ -4,6 +4,7 @@ module Menu
     Please press the key 1 if you want to ADD a list.
     Please press the key 2 if you want to SHOW a list.
     Please press the key 3 if you want to UPDATE a list.
+    Please press the key 4 if you want to READ a list.
     Please press the key Q if you want to QUIT the program"
   end
   def show
@@ -38,6 +39,10 @@ class List
   def write_to_file(filename)
     IO.write(filename, @all_tasks.map(&:to_s).join("\n"))
   end
+
+  def read_for_file(filename)
+    IO.readlines(filename).each { |line| add(Task.new(line.chomp)) }
+  end
 end
 
 class Task
@@ -66,9 +71,16 @@ if __FILE__ == $PROGRAM_NAME
       puts actual_list.show
     when '3'
       actual_list.write_to_file(prompt('Please enter a filename'))
+    when '4'
+      begin
+        actual_list.read_for_file(prompt('Please enter a filename'))
+      rescue Errno::ENOENT
+        puts 'File name not found, please verify your file name and path.'
+      end
     else
       puts "Sorry, I did not understand"
     end
+     prompt('Press enter to continue', '')
   end
   puts "Outro - Thanks for using the menu system!"
 end
