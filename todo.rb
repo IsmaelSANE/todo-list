@@ -1,6 +1,28 @@
 class List
-  if __FILE__ == $PROGRAM_NAME
-    my_list = List.new
-    puts 'You have created a new list'
+
+  attr_reader :description, :all_tasks
+
+  def initialize
+    @all_tasks = []
   end
+
+  def add(task)
+    all_tasks << task
+  end
+end
+
+class Task
+
+  def initialize(description)
+    @description = description
+  end
+end
+
+if __FILE__ == $PROGRAM_NAME
+  my_list = List.new
+  puts 'You have created a new list'
+  puts "what's the name of the task?"
+  task = gets.chomp
+  my_list.add(Task.new(task))
+  puts "You have added #{task} to the Todo List"
 end
