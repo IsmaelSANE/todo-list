@@ -7,6 +7,7 @@ module Menu
     Please press the key 4 if you want to READ a list.
     Please press the key 5 if you want to WRITE a list.
     Please press the key 6 if you want to DELETE a list.
+    Please press the key 6 if you want to TOGGLE a Status.
     Please press the key Q if you want to QUIT the program"
   end
   def show
@@ -82,6 +83,14 @@ class Task
     @status
   end
 
+  def toggle_status
+    @completed_status = !completed?
+  end
+
+  def toggle(task_number)
+    all_tasks[task_number - 1].toggle_status
+  end
+
   private
   def represent_status
     completed? ? print '[X]' : print '[ ]'
@@ -115,6 +124,9 @@ if __FILE__ == $PROGRAM_NAME
     when '6'
       puts actual_list.show
       actual_list.delete(prompt('Which task to delete?').to_i)
+    when '7'
+      puts my_list.show
+      my_list.toggle(prompt('Which would you like to toggle the status for?').to_i)
     else
       puts "Sorry, I did not understand"
     end
