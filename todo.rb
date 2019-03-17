@@ -24,7 +24,7 @@ end
 
 class List
 
-  attr_reader :description, :all_tasks
+  attr_reader :all_tasks
 
   def initialize
     @all_tasks = []
@@ -39,11 +39,16 @@ class List
   end
 
   def write_to_file(filename)
-    IO.write(filename, @all_tasks.map(&:to_s).join("\n"))
+    machinified = @all_tasks.map(&:to_machine).join("\n")
+    IO.write(filename, machinified)
   end
 
   def read_for_file(filename)
-    IO.readlines(filename).each { |line| add(Task.new(line.chomp)) }
+    IO.readlines(filename).each do |line|
+      status, *description = line.split(':')
+      status = status.include?('X')
+      add(Task.new(description.join(':').strip, status))
+    end
   end
 
   def delete(task_number)
@@ -53,16 +58,33 @@ class List
   def update(task_number, task)
     all_tasks[task_number - 1] = task
   end
+
+  def  to_machine
+    "#{represent_status}: #{description}"
+  end
 end
 
 class Task
 
-  def initialize(description)
+  attr_reader :description
+  attr_accessor :status
+
+  def initialize(description, status= false)
     @description = description
+    @status = status
   end
 
   def to_s
     @description
+  end
+
+  def completed?
+    @status
+  end
+
+  private
+  def represent_status
+    completed? ? print '[X]' : print '[ ]'
   end
 end
 
